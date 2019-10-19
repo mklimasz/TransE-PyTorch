@@ -24,10 +24,16 @@ flags.DEFINE_bool("use_gpu", default=True, help="Flag enabling gpu usage.")
 flags.DEFINE_integer("validation_freq", default=10, help="Validate model every X epochs.")
 flags.DEFINE_string("checkpoint_path", default="", help="Path to model checkpoint (by default train from scratch).")
 
+HITS_AT_1_SCORE = float
+HITS_AT_3_SCORE = float
+HITS_AT_10_SCORE = float
+MRR_SCORE = float
+METRICS = Tuple[HITS_AT_1_SCORE, HITS_AT_3_SCORE, HITS_AT_10_SCORE, MRR_SCORE]
+
 
 def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities_count: int,
          summary_writer: tensorboard.SummaryWriter, device: torch.device, epoch_id: int, metric_suffix: str,
-         ) -> Tuple[float, float, float, float]:
+         ) -> METRICS:
     examples_sum = 0.0
     hits_at_1 = 0.0
     hits_at_3 = 0.0
