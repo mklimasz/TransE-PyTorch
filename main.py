@@ -49,13 +49,15 @@ def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities
         # Check all possible heads
         triplets = torch.stack((all_entities, relations, tails), dim=2).reshape(-1, 3)
         heads_predictions = model.predict(triplets).reshape(current_batch_size, -1)
-        predictions = torch.cat((tails_predictions, heads_predictions), dim=0)
-        actual = torch.cat((tail.reshape(-1, 1), head.reshape(-1, 1)))
 
-        hits_at_1 += metric.hit_at_k(predictions, actual, device=device, k=1)
-        hits_at_3 += metric.hit_at_k(predictions, actual, device=device, k=3)
-        hits_at_10 += metric.hit_at_k(predictions, actual, device=device, k=10)
-        mrr += metric.mrr(predictions, actual)
+        # Concat predictions
+        predictions = torch.cat((tails_predictions, heads_predictions), dim=0)
+        ground_truth_entity_id = torch.cat((tail.reshape(-1, 1), head.reshape(-1, 1)))
+
+        hits_at_1 += metric.hit_at_k(predictions, ground_truth_entity_id, device=device, k=1)
+        hits_at_3 += metric.hit_at_k(predictions, ground_truth_entity_id, device=device, k=3)
+        hits_at_10 += metric.hit_at_k(predictions, ground_truth_entity_id, device=device, k=10)
+        mrr += metric.mrr(predictions, ground_truth_entity_id)
         examples_sum += current_batch_size * 2
 
     hits_at_1_score = hits_at_1 / examples_sum * 100
