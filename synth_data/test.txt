@@ -1,0 +1,1 @@
+/m/director1	/person/directorOf	/m/movie1

@@ -1,0 +1,6 @@
+/m/director1	/person/directorOf	/m/movie1
+/m/director2	/person/directorOf	/m/movie2
+/m/director3	/person/directorOf	/m/movie3
+/m/actor1	/person/actorOf	/m/series1
+/m/actor2	/person/actorOf	/m/series2
+/m/actor3	/person/actorOf	/m/series3
