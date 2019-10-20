@@ -99,11 +99,11 @@ def main(_):
     epochs = FLAGS.epochs
     device = torch.device('cuda') if FLAGS.use_gpu else torch.device('cpu')
 
-    train_set = data.FB15K237Dataset(train_path, entity2id, relation2id)
+    train_set = data.FB15KDataset(train_path, entity2id, relation2id)
     train_generator = torch_data.DataLoader(train_set, batch_size=batch_size)
-    validation_set = data.FB15K237Dataset(validation_path, entity2id, relation2id)
+    validation_set = data.FB15KDataset(validation_path, entity2id, relation2id)
     validation_generator = torch_data.DataLoader(validation_set, batch_size=FLAGS.validation_batch_size)
-    test_set = data.FB15K237Dataset(test_path, entity2id, relation2id)
+    test_set = data.FB15KDataset(test_path, entity2id, relation2id)
     test_generator = torch_data.DataLoader(test_set, batch_size=FLAGS.validation_batch_size)
 
     model = model_definition.TransE(entity_count=len(entity2id), relation_count=len(relation2id), dim=vector_length,

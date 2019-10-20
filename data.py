@@ -25,7 +25,8 @@ def create_mappings(dataset_path: str) -> Tuple[Mapping, Mapping]:
     return entity2id, relation2id
 
 
-class FB15K237Dataset(data.Dataset):
+class FB15KDataset(data.Dataset):
+    """Dataset implementation for handling FB15K and FB15K-237."""
 
     def __init__(self, data_path: str, entity2id: Mapping, relation2id: Mapping):
         self.entity2id = entity2id
