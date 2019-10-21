@@ -132,17 +132,12 @@ def main(_):
 
             positive_triples = torch.stack((local_heads, local_relations, local_tails), dim=1)
 
-            # Preparing negatives
-            broken_heads = local_heads.clone()
-            broken_tails = local_tails.clone()
-            current_batch_size = broken_heads.size()[0]
-
-            # Replace either head or tail in each example within batch with random entity id.
-            for idx in range(current_batch_size):
-                if torch.randint(high=2, size=(1,)).item() % 2 == 0:
-                    broken_heads[idx] = torch.randint(high=len(entity2id), size=(1,))
-                else:
-                    broken_tails[idx] = torch.randint(high=len(entity2id), size=(1,))
+            # Preparing negatives.
+            # Generate binary tensor to replace either head or tail. 1 means replace head, 0 means replace tail.
+            head_or_tail = torch.randint(high=2, size=local_heads.size(), device=device)
+            random_entities = torch.randint(high=len(entity2id), size=local_heads.size(), device=device)
+            broken_heads = torch.where(head_or_tail == 1, random_entities, local_heads)
+            broken_tails = torch.where(head_or_tail == 0, random_entities, local_tails)
             negative_triples = torch.stack((broken_heads, local_relations, broken_tails), dim=1)
 
             optimizer.zero_grad()
