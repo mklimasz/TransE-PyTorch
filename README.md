@@ -3,8 +3,8 @@ Reimplementation of TransE [[1]](#references) model in PyTorch.
 
 ## Table of Contents
 1. [Results](#results)
-    1. [Metrics](#metrics)
-    2. [Examples](#examples)
+    1. [Datasets](#datasets)
+        1. [FB15k](#fb15k)
 2. [Usage](#usage)
     1. [Training](#training)
         1. [Options](#options)
@@ -23,9 +23,14 @@ Reimplementation of TransE [[1]](#references) model in PyTorch.
 
 ## Usage
 
-### Training
+### Synthetic data
+For fast debugging/feedback loop use synthetic data from [synth_data](synth_data) directory.
 ```bash
 python3 main.py --nouse_gpu
+```
+### Training
+```bash
+python3 main.py --nouse_gpu --dataset_path=<path_to_your_dataset>
 ```
 #### Options
 To see possible configuration options run help
