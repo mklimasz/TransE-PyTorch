@@ -1,4 +1,4 @@
-# TransE-PyTroch
+# TransE-PyTorch
 Reimplementation of TransE [[1]](#references) model in PyTorch.
 
 ## Table of Contents
@@ -16,10 +16,10 @@ Reimplementation of TransE [[1]](#references) model in PyTorch.
 ### Datasets
 
 #### FB15k
-| Source/Metric  | Hit@10 (raw) |
+| Source/Metric  | Hits@10 (raw) |
 | ---------------| ------------ |
 | Paper [[1]](#references) | 34.9 |
-| TransE-Pytorch | TDB |
+| TransE-PyTorch | TBD |
 
 ## Usage
 
@@ -38,4 +38,4 @@ python3 -m unittest discover -p "*_test.py"
 ```
 
 ## References
-[1] [Border et al., "Translating embeddings for modeling multi- relational data," in Adv. Neural Inf. Process. Syst., 2013](http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf)
+[1] [Bordes et al., "Translating embeddings for modeling multi- relational data," in Adv. Neural Inf. Process. Syst., 2013](http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf)
