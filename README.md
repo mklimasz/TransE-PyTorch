@@ -1,5 +1,5 @@
 # TransE-PyTroch
-Reimplementation of TransE model in PyTorch.
+Reimplementation of TransE [[1]](#references) model in PyTorch.
 
 ## Table of Contents
 1. [Results](#results)
@@ -12,12 +12,14 @@ Reimplementation of TransE model in PyTorch.
 3. [References](#references)
 
 ## Results
-Early stopping - the best Hit@10 metric on validation dataset.
 
-### Metrics
-All reported metrics are for **raw** test dataset.
+### Datasets
 
-### Examples
+#### FB15k
+| Source/Metric  | Hit@10 (raw) |
+| ---------------| ------------ |
+| Paper [[1]](#references) | 34.9 |
+| TransE-Pytorch | TDB |
 
 ## Usage
 
@@ -36,15 +38,4 @@ python3 -m unittest discover -p "*_test.py"
 ```
 
 ## References
-```
-@incollection{NIPS2013_5071,
-    title = {Translating Embeddings for Modeling Multi-relational Data},
-    author = {Bordes, Antoine and Usunier, Nicolas and Garcia-Duran, Alberto and Weston, Jason and Yakhnenko, Oksana},
-    booktitle = {Advances in Neural Information Processing Systems 26},
-    editor = {C. J. C. Burges and L. Bottou and M. Welling and Z. Ghahramani and K. Q. Weinberger},
-    pages = {2787--2795},
-    year = {2013},
-    publisher = {Curran Associates, Inc.},
-    url = {http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf}
-}
-```
+[1] [Border et al., "Translating embeddings for modeling multi- relational data," in Adv. Neural Inf. Process. Syst., 2013](http://papers.nips.cc/paper/5071-translating-embeddings-for-modeling-multi-relational-data.pdf)
