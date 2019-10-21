@@ -41,11 +41,12 @@ def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities
     hits_at_10 = 0.0
     mrr = 0.0
 
+    entity_ids = torch.arange(end=entities_count, device=device).unsqueeze(0)
     for head, relation, tail in data_generator:
         current_batch_size = head.size()[0]
 
         head, relation, tail = head.to(device), relation.to(device), tail.to(device)
-        all_entities = torch.arange(end=entities_count, device=device).unsqueeze(0).repeat(current_batch_size, 1)
+        all_entities = entity_ids.repeat(current_batch_size, 1)
         heads = head.reshape(-1, 1).repeat(1, all_entities.size()[1])
         relations = relation.reshape(-1, 1).repeat(1, all_entities.size()[1])
         tails = tail.reshape(-1, 1).repeat(1, all_entities.size()[1])
