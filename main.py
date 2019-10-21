@@ -35,7 +35,7 @@ METRICS = Tuple[HITS_AT_1_SCORE, HITS_AT_3_SCORE, HITS_AT_10_SCORE, MRR_SCORE]
 def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities_count: int,
          summary_writer: tensorboard.SummaryWriter, device: torch.device, epoch_id: int, metric_suffix: str,
          ) -> METRICS:
-    examples_sum = 0.0
+    examples_count = 0.0
     hits_at_1 = 0.0
     hits_at_3 = 0.0
     hits_at_10 = 0.0
@@ -66,12 +66,13 @@ def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities
         hits_at_3 += metric.hit_at_k(predictions, ground_truth_entity_id, device=device, k=3)
         hits_at_10 += metric.hit_at_k(predictions, ground_truth_entity_id, device=device, k=10)
         mrr += metric.mrr(predictions, ground_truth_entity_id)
-        examples_sum += current_batch_size * 2
 
-    hits_at_1_score = hits_at_1 / examples_sum * 100
-    hits_at_3_score = hits_at_3 / examples_sum * 100
-    hits_at_10_score = hits_at_10 / examples_sum * 100
-    mrr_score = mrr / examples_sum * 100
+        examples_count += predictions.size()[0]
+
+    hits_at_1_score = hits_at_1 / examples_count * 100
+    hits_at_3_score = hits_at_3 / examples_count * 100
+    hits_at_10_score = hits_at_10 / examples_count * 100
+    mrr_score = mrr / examples_count * 100
     summary_writer.add_scalar('Metrics/Hits_1/' + metric_suffix, hits_at_1_score, global_step=epoch_id)
     summary_writer.add_scalar('Metrics/Hits_3/' + metric_suffix, hits_at_3_score, global_step=epoch_id)
     summary_writer.add_scalar('Metrics/Hits_10/' + metric_suffix, hits_at_10_score, global_step=epoch_id)
