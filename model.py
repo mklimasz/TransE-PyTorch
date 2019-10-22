@@ -28,20 +28,16 @@ class TransE(nn.Module):
         relations_emb = nn.Embedding(num_embeddings=self.relation_count + 1,
                                      embedding_dim=self.dim,
                                      padding_idx=self.relation_count)
-        relations_emb.weight.requires_grad = False
         uniform_range = 6 / np.sqrt(self.dim)
         relations_emb.weight.data.uniform_(-uniform_range, uniform_range)
         # -1 to avoid nan for OOV vector
-        relations_emb.weight[:-1, :].div_(relations_emb.weight[:-1, :].norm(p=1, dim=1, keepdim=True))
-        relations_emb.weight.requires_grad = True
+        relations_emb.weight.data[:-1, :].div_(relations_emb.weight.data[:-1, :].norm(p=1, dim=1, keepdim=True))
         return relations_emb
 
     def forward(self, positive_triplets, negative_triplets):
         """Triplets should have shape Bx3 where dim 3 are head id, relation id, tail id."""
         # -1 to avoid nan for OOV vector
-        self.entities_emb.weight.requires_grad = False
-        self.entities_emb.weight[:-1, :].div_(self.entities_emb.weight[:-1, :].norm(p=2, dim=1, keepdim=True))
-        self.entities_emb.weight.requires_grad = True
+        self.entities_emb.weight.data[:-1, :].div_(self.entities_emb.weight.data[:-1, :].norm(p=2, dim=1, keepdim=True))
 
         assert positive_triplets.size()[1] == 3
         positive_distances = self._distance(positive_triplets)
