@@ -1,5 +1,5 @@
 # TransE-PyTorch
-Reimplementation of TransE [[1]](#references) model in PyTorch.
+Implementation of TransE [[1]](#references) model in PyTorch.
 
 ## Table of Contents
 1. [Results](#results)
@@ -16,10 +16,16 @@ Reimplementation of TransE [[1]](#references) model in PyTorch.
 ### Datasets
 
 #### FB15k
-| Source/Metric  | Hits@10 (raw) |
-| ---------------| ------------ |
-| Paper [[1]](#references) | 34.9 |
-| TransE-PyTorch | TBD |
+
+| Source/Metric  | Hits@1 (raw) | Hits@3 (raw) | Hits@10 (raw) | MRR (raw) |
+| ---------------| ------------ | ------------ | ------------- | --------- |
+| Paper [[1]](#references) | X | X | 34.9 | X |
+| TransE-PyTorch | 9.91 | 22.96 | **42.05** | 20.29 |
+
+```bash
+python3 main.py --dataset_path=<path_to_fb15k_dataset> --epochs=10000 --batch_size=128
+```
+
 
 ## Usage
 
