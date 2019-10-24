@@ -20,10 +20,10 @@ Implementation of TransE [[1]](#references) model in PyTorch.
 | Source/Metric  | Hits@1 (raw) | Hits@3 (raw) | Hits@10 (raw) | MRR (raw) |
 | ---------------| ------------ | ------------ | ------------- | --------- |
 | Paper [[1]](#references) | X | X | 34.9 | X |
-| TransE-PyTorch | 9.91 | 22.96 | **42.05** | 20.29 |
+| TransE-PyTorch | 10.57 | 24.2 | **44.5** | 21.38 |
 
 ```bash
-python3 main.py --dataset_path=<path_to_fb15k_dataset> --epochs=10000 --batch_size=128
+python3 main.py --dataset_path=<path_to_fb15k_dataset> --epochs=20000 --batch_size=128
 ```
 
 
