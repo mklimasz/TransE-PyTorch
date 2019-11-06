@@ -24,6 +24,7 @@ flags.DEFINE_string("dataset_path", default="./synth_data", help="Path to datase
 flags.DEFINE_bool("use_gpu", default=True, help="Flag enabling gpu usage.")
 flags.DEFINE_integer("validation_freq", default=10, help="Validate model every X epochs.")
 flags.DEFINE_string("checkpoint_path", default="", help="Path to model checkpoint (by default train from scratch).")
+flags.DEFINE_string("tensorboard_log_dir", default="./runs", help="Path for tensorboard log directory.")
 
 HITS_AT_1_SCORE = float
 HITS_AT_3_SCORE = float
@@ -114,7 +115,7 @@ def main(_):
     model = model.to(device)
     optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
-    summary_writer = tensorboard.SummaryWriter()
+    summary_writer = tensorboard.SummaryWriter(log_dir=FLAGS.tensorboard_log_dir)
     start_epoch_id = 1
     step = 0
     best_score = 0.0
@@ -127,7 +128,10 @@ def main(_):
     # Training loop
     for epoch_id in range(start_epoch_id, epochs + 1):
         print("Starting epoch: ", epoch_id)
+        loss_impacting_samples_count = 0
+        samples_count = 0
         model.train()
+
         for local_heads, local_relations, local_tails in train_generator:
             local_heads, local_relations, local_tails = (local_heads.to(device), local_relations.to(device),
                                                          local_tails.to(device))
@@ -145,14 +149,21 @@ def main(_):
             optimizer.zero_grad()
 
             loss, pd, nd = model(positive_triples, negative_triples)
-            loss.backward()
+            loss.mean().backward()
 
-            summary_writer.add_scalar('Loss/train', loss.data.cpu().numpy(), global_step=step)
-            summary_writer.add_scalar('Distance/positive', pd.data.cpu().numpy(), global_step=step)
-            summary_writer.add_scalar('Distance/negative', nd.data.cpu().numpy(), global_step=step)
+            summary_writer.add_scalar('Loss/train', loss.mean().data.cpu().numpy(), global_step=step)
+            summary_writer.add_scalar('Distance/positive', pd.sum().data.cpu().numpy(), global_step=step)
+            summary_writer.add_scalar('Distance/negative', nd.sum().data.cpu().numpy(), global_step=step)
+
+            loss = loss.data.cpu()
+            loss_impacting_samples_count += loss.nonzero().size()[0]
+            samples_count += loss.size()[0]
 
             optimizer.step()
             step += 1
+
+        summary_writer.add_scalar('Metrics/loss_impacting_samples', loss_impacting_samples_count / samples_count * 100,
+                                  global_step=epoch_id)
 
         if epoch_id % FLAGS.validation_freq == 0:
             model.eval()

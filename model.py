@@ -14,7 +14,7 @@ class TransE(nn.Module):
         self.dim = dim
         self.entities_emb = self._init_enitity_emb()
         self.relations_emb = self._init_relation_emb()
-        self.criterion = nn.MarginRankingLoss(margin=margin)
+        self.criterion = nn.MarginRankingLoss(margin=margin, reduction='none')
 
     def _init_enitity_emb(self):
         entities_emb = nn.Embedding(num_embeddings=self.entity_count + 1,
@@ -34,8 +34,13 @@ class TransE(nn.Module):
         relations_emb.weight.data[:-1, :].div_(relations_emb.weight.data[:-1, :].norm(p=1, dim=1, keepdim=True))
         return relations_emb
 
-    def forward(self, positive_triplets, negative_triplets):
-        """Triplets should have shape Bx3 where dim 3 are head id, relation id, tail id."""
+    def forward(self, positive_triplets: torch.LongTensor, negative_triplets: torch.LongTensor):
+        """Return model losses based on the input.
+
+        :param positive_triplets: triplets of positives in Bx3 shape (B - batch, 3 - head, relation and tail)
+        :param negative_triplets: triplets of negatives in Bx3 shape (B - batch, 3 - head, relation and tail)
+        :return: tuple of the model loss, positive triplets loss component, negative triples loss component
+        """
         # -1 to avoid nan for OOV vector
         self.entities_emb.weight.data[:-1, :].div_(self.entities_emb.weight.data[:-1, :].norm(p=2, dim=1, keepdim=True))
 
@@ -45,10 +50,14 @@ class TransE(nn.Module):
         assert negative_triplets.size()[1] == 3
         negative_distances = self._distance(negative_triplets)
 
-        return self.loss(positive_distances, negative_distances), positive_distances.sum(), negative_distances.sum()
+        return self.loss(positive_distances, negative_distances), positive_distances, negative_distances
 
-    def predict(self, triplets):
-        """Returns dissimilarity score for given triplets."""
+    def predict(self, triplets: torch.LongTensor):
+        """Calculated dissimilarity score for given triplets.
+
+        :param triplets: triplets in Bx3 shape (B - batch, 3 - head, relation and tail)
+        :return: dissimilarity score for given triplets
+        """
         return self._distance(triplets)
 
     def loss(self, positive_distances, negative_distances):
