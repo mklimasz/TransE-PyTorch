@@ -83,7 +83,7 @@ def test(model: torch.nn.Module, data_generator: torch_data.DataLoader, entities
 
 
 def main(_):
-    torch.random.manual_seed(FLAGS.lr)
+    torch.random.manual_seed(FLAGS.seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 
